@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>CONTROL</title>
+
+<style>
+:root{
+  --bg:#05050a;
+  --panel:#0f172a;
+  --ok:#22c55e;
+  --bad:#ef4444;
+  --core:#6366f1;
+  --text:#e5e7eb;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:system-ui, sans-serif;
+  background:radial-gradient(circle at center, #1e1b4b, var(--bg));
+  color:var(--text);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  user-select:none;
+}
+
+/* ===== MOBILE BLOCK ===== */
+#mobile-block{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#000;
+  color:#fff;
+  font-size:1.2rem;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:40px;
+  z-index:999;
+}
+
+@media (max-width: 900px){
+  #game{display:none;}
+  #mobile-block{display:flex;}
+}
+
+/* ===== GAME ===== */
+#game{
+  width:500px;
+  text-align:center;
+}
+
+h1{
+  letter-spacing:6px;
+  margin-bottom:8px;
+}
+
+.subtitle{
+  opacity:.5;
+  margin-bottom:30px;
+}
+
+/* ===== CORE ===== */
+.core{
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  margin:0 auto 20px;
+  background:var(--core);
+  box-shadow:0 0 60px rgba(99,102,241,.6);
+  transition:.15s;
+}
+
+.core.overload{
+  background:var(--bad);
+  box-shadow:0 0 80px rgba(239,68,68,.9);
+  animation:shake .1s infinite;
+}
+
+@keyframes shake{
+  0%{transform:translate(0)}
+  25%{transform:translate(2px,-2px)}
+  50%{transform:translate(-2px,2px)}
+  75%{transform:translate(2px,2px)}
+  100%{transform:translate(0)}
+}
+
+/* ===== HUD ===== */
+.stats{
+  display:flex;
+  justify-content:space-between;
+  margin-top:30px;
+  font-size:.9rem;
+  opacity:.7;
+}
+
+.energy{
+  font-size:2.2rem;
+  font-weight:800;
+  margin-top:10px;
+}
+
+.hint{
+  margin-top:30px;
+  opacity:.4;
+  font-size:.85rem;
+}
+</style>
+</head>
+
+<body>
+
+<div id="mobile-block">
+  Este juego está diseñado exclusivamente para PC.<br><br>
+  Usa teclado y ratón.
+</div>
+
+<div id="game">
+  <h1>CONTROL</h1>
+  <div class="subtitle">mantén la estabilidad</div>
+
+  <div class="core" id="core"></div>
+
+  <div class="energy" id="energy">50%</div>
+
+  <div class="stats">
+    <div>ESPACIO → Anclar</div>
+    <div>CLICK → Ajustar</div>
+  </div>
+
+  <div class="hint">
+    No existe tutorial.<br>
+    Aprende observando.
+  </div>
+</div>
+
+<script>
+let energy = 50;
+let velocity = 0;
+let anchored = false;
+
+const core = document.getElementById("core");
+const energyEl = document.getElementById("energy");
+
+function update(){
+  if(!anchored){
+    velocity += (Math.random() - 0.5) * 2;
+    energy += velocity * 0.3;
+  }
+
+  energy = Math.max(0, Math.min(100, energy));
+  energyEl.textContent = Math.round(energy) + "%";
+
+  if(energy < 20 || energy > 80){
+    core.classList.add("overload");
+  }else{
+    core.classList.remove("overload");
+  }
+
+  requestAnimationFrame(update);
+}
+
+document.addEventListener("mousedown", e=>{
+  if(e.button === 0) velocity -= 1.5;
+  if(e.button === 2) velocity += 1.5;
+});
+
+document.addEventListener("contextmenu", e=>e.preventDefault());
+
+document.addEventListener("keydown", e=>{
+  if(e.code === "Space"){
+    anchored = true;
+    velocity = 0;
+  }
+});
+
+document.addEventListener("keyup", e=>{
+  if(e.code === "Space"){
+    anchored = false;
+  }
+});
+
+update();
+</script>
+
+</body>
+</html>
