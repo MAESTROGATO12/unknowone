@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>SYSTEM</title>
+
+<style>
+:root{
+  --bg:#f4f6fb;
+  --panel:#ffffff;
+  --accent:#6366f1;
+  --accent-soft:#eef2ff;
+  --text:#111827;
+  --muted:#6b7280;
+  --radius:18px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background:linear-gradient(135deg,#eef2ff,#f8fafc);
+  color:var(--text);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.app{
+  width:960px;
+  height:600px;
+  background:var(--panel);
+  border-radius:24px;
+  display:grid;
+  grid-template-columns:260px 1fr;
+  box-shadow:0 40px 80px rgba(0,0,0,.15);
+  overflow:hidden;
+}
+
+/* SIDEBAR */
+.sidebar{
+  background:linear-gradient(180deg,#f9fafb,#eef2ff);
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+
+.logo{
+  font-weight:800;
+  letter-spacing:4px;
+}
+
+.stat{
+  background:var(--panel);
+  padding:16px;
+  border-radius:14px;
+}
+
+.stat .value{
+  font-size:1.6rem;
+  font-weight:700;
+}
+
+.stat .label{
+  font-size:.8rem;
+  color:var(--muted);
+}
+
+button{
+  border:none;
+  border-radius:999px;
+  padding:12px 18px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.primary{
+  background:var(--accent);
+  color:white;
+}
+
+.secondary{
+  background:var(--accent-soft);
+  color:var(--accent);
+}
+
+/* MAIN */
+.main{
+  padding:32px;
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+
+.title{
+  font-size:1.4rem;
+  font-weight:700;
+}
+
+.panel{
+  background:var(--panel);
+  border-radius:var(--radius);
+  padding:24px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.energy{
+  font-size:3.5rem;
+  font-weight:800;
+  text-align:center;
+}
+
+.sub{
+  text-align:center;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+.modules{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+}
+
+.module{
+  border:1px solid #e5e7eb;
+  border-radius:16px;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.module.locked{
+  opacity:.4;
+}
+
+.module h3{
+  font-size:1rem;
+}
+
+.module p{
+  font-size:.8rem;
+  color:var(--muted);
+}
+
+.footer{
+  margin-top:auto;
+  font-size:.75rem;
+  color:var(--muted);
+  text-align:right;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="logo">SYSTEM</div>
+
+    <div class="stat">
+      <div class="value" id="energy">0</div>
+      <div class="label">ENERGÍA</div>
+    </div>
+
+    <div class="stat">
+      <div class="value" id="rate">+0</div>
+      <div class="label">POR SEGUNDO</div>
+    </div>
+
+    <button class="primary" onclick="generate()">Generar energía</button>
+    <button class="secondary" onclick="resetGame()">Reiniciar sistema</button>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="title">Módulos del sistema</div>
+
+    <div class="panel modules">
+
+      <div class="module" id="m1">
+        <h3>Generador Básico</h3>
+        <p>Produce energía automáticamente.</p>
+        <button onclick="buyModule(1)">Activar (10)</button>
+      </div>
+
+      <div class="module locked" id="m2">
+        <h3>Optimizador</h3>
+        <p>Aumenta la eficiencia del sistema.</p>
+        <button onclick="buyModule(2)">Activar (50)</button>
+      </div>
+
+      <div class="module locked" id="m3">
+        <h3>Amplificador</h3>
+        <p>Multiplica la producción.</p>
+        <button onclick="buyModule(3)">Activar (200)</button>
+      </div>
+
+      <div class="module locked" id="m4">
+        <h3>Sincronizador</h3>
+        <p>Estabilidad máxima.</p>
+        <button onclick="buyModule(4)">Activar (500)</button>
+      </div>
+
+    </div>
+
+    <div class="footer">© 2026 SYSTEM</div>
+  </div>
+
+</div>
+
+<script>
+let energy = Number(localStorage.getItem("energy")) || 0;
+let rate = Number(localStorage.getItem("rate")) || 0;
+let modules = JSON.parse(localStorage.getItem("modules")) || [];
+
+const costs = {1:10,2:50,3:200,4:500};
+const gains = {1:1,2:2,3:5,4:10};
+
+function updateUI(){
+  document.getElementById("energy").textContent = energy;
+  document.getElementById("rate").textContent = "+"+rate;
+
+  [1,2,3,4].forEach(i=>{
+    if(modules.includes(i)){
+      document.getElementById("m"+i).classList.remove("locked");
+      document.querySelector("#m"+i+" button").disabled=true;
+    }
+  });
+}
+
+function generate(){
+  energy++;
+  save();
+}
+
+function buyModule(id){
+  if(energy>=costs[id] && !modules.includes(id)){
+    energy-=costs[id];
+    rate+=gains[id];
+    modules.push(id);
+    save();
+  }
+}
+
+function save(){
+  localStorage.setItem("energy",energy);
+  localStorage.setItem("rate",rate);
+  localStorage.setItem("modules",JSON.stringify(modules));
+  updateUI();
+}
+
+setInterval(()=>{
+  energy+=rate;
+  save();
+},1000);
+
+function resetGame(){
+  if(confirm("¿Reiniciar el sistema?")){
+    localStorage.clear();
+    location.reload();
+  }
+}
+
+updateUI();
+</script>
+
+</body>
+</html>
