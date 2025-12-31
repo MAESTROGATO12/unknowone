@@ -2,154 +2,68 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SYSTEM</title>
+<title>Proyecto Narrativo</title>
 
 <style>
-:root{
-  --bg:#f4f6fb;
-  --panel:#ffffff;
-  --accent:#6366f1;
-  --accent-soft:#eef2ff;
-  --text:#111827;
-  --muted:#6b7280;
-  --radius:18px;
-}
-
-*{margin:0;padding:0;box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0}
 
 body{
-  font-family:system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background:linear-gradient(135deg,#eef2ff,#f8fafc);
-  color:var(--text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background:#0b0b0f;
+  color:#e5e7eb;
   height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
 }
 
-.app{
-  width:960px;
-  height:600px;
-  background:var(--panel);
-  border-radius:24px;
-  display:grid;
-  grid-template-columns:260px 1fr;
-  box-shadow:0 40px 80px rgba(0,0,0,.15);
-  overflow:hidden;
-}
-
-/* SIDEBAR */
-.sidebar{
-  background:linear-gradient(180deg,#f9fafb,#eef2ff);
-  padding:24px;
-  display:flex;
-  flex-direction:column;
-  gap:24px;
-}
-
-.logo{
-  font-weight:800;
-  letter-spacing:4px;
-}
-
-.stat{
-  background:var(--panel);
-  padding:16px;
-  border-radius:14px;
-}
-
-.stat .value{
-  font-size:1.6rem;
-  font-weight:700;
-}
-
-.stat .label{
-  font-size:.8rem;
-  color:var(--muted);
-}
-
-button{
-  border:none;
-  border-radius:999px;
-  padding:12px 18px;
-  font-weight:600;
-  cursor:pointer;
-}
-
-.primary{
-  background:var(--accent);
-  color:white;
-}
-
-.secondary{
-  background:var(--accent-soft);
-  color:var(--accent);
-}
-
-/* MAIN */
-.main{
-  padding:32px;
-  display:flex;
-  flex-direction:column;
-  gap:24px;
+.game{
+  width:900px;
+  max-width:90%;
+  background:#111118;
+  border-radius:20px;
+  padding:40px;
+  box-shadow:0 0 60px rgba(0,0,0,.6);
 }
 
 .title{
-  font-size:1.4rem;
-  font-weight:700;
+  font-size:1.8rem;
+  margin-bottom:20px;
+  opacity:.9;
 }
 
-.panel{
-  background:var(--panel);
-  border-radius:var(--radius);
-  padding:24px;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
+.text{
+  font-size:1.1rem;
+  line-height:1.7;
+  margin-bottom:30px;
+  min-height:140px;
 }
 
-.energy{
-  font-size:3.5rem;
-  font-weight:800;
-  text-align:center;
-}
-
-.sub{
-  text-align:center;
-  color:var(--muted);
-  margin-top:6px;
-}
-
-.modules{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:16px;
-}
-
-.module{
-  border:1px solid #e5e7eb;
-  border-radius:16px;
-  padding:18px;
+.choices{
   display:flex;
   flex-direction:column;
-  gap:8px;
+  gap:14px;
 }
 
-.module.locked{
-  opacity:.4;
-}
-
-.module h3{
+button{
+  background:#1f2937;
+  border:none;
+  padding:16px;
+  border-radius:12px;
+  color:#fff;
   font-size:1rem;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.module p{
-  font-size:.8rem;
-  color:var(--muted);
+button:hover{
+  background:#374151;
 }
 
 .footer{
-  margin-top:auto;
+  margin-top:25px;
   font-size:.75rem;
-  color:var(--muted);
+  color:#6b7280;
   text-align:right;
 }
 </style>
@@ -157,117 +71,133 @@ button{
 
 <body>
 
-<div class="app">
-
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="logo">SYSTEM</div>
-
-    <div class="stat">
-      <div class="value" id="energy">0</div>
-      <div class="label">ENERGÍA</div>
-    </div>
-
-    <div class="stat">
-      <div class="value" id="rate">+0</div>
-      <div class="label">POR SEGUNDO</div>
-    </div>
-
-    <button class="primary" onclick="generate()">Generar energía</button>
-    <button class="secondary" onclick="resetGame()">Reiniciar sistema</button>
-  </div>
-
-  <!-- MAIN -->
-  <div class="main">
-    <div class="title">Módulos del sistema</div>
-
-    <div class="panel modules">
-
-      <div class="module" id="m1">
-        <h3>Generador Básico</h3>
-        <p>Produce energía automáticamente.</p>
-        <button onclick="buyModule(1)">Activar (10)</button>
-      </div>
-
-      <div class="module locked" id="m2">
-        <h3>Optimizador</h3>
-        <p>Aumenta la eficiencia del sistema.</p>
-        <button onclick="buyModule(2)">Activar (50)</button>
-      </div>
-
-      <div class="module locked" id="m3">
-        <h3>Amplificador</h3>
-        <p>Multiplica la producción.</p>
-        <button onclick="buyModule(3)">Activar (200)</button>
-      </div>
-
-      <div class="module locked" id="m4">
-        <h3>Sincronizador</h3>
-        <p>Estabilidad máxima.</p>
-        <button onclick="buyModule(4)">Activar (500)</button>
-      </div>
-
-    </div>
-
-    <div class="footer">© 2026 SYSTEM</div>
-  </div>
-
+<div class="game">
+  <div class="title" id="title"></div>
+  <div class="text" id="text"></div>
+  <div class="choices" id="choices"></div>
+  <div class="footer">Guardado automático</div>
 </div>
 
 <script>
-let energy = Number(localStorage.getItem("energy")) || 0;
-let rate = Number(localStorage.getItem("rate")) || 0;
-let modules = JSON.parse(localStorage.getItem("modules")) || [];
+// =================== ESTADO DEL JUEGO ===================
 
-const costs = {1:10,2:50,3:200,4:500};
-const gains = {1:1,2:2,3:5,4:10};
+let state = JSON.parse(localStorage.getItem("gameState")) || {
+  scene: "inicio",
+  rutina: 0,
+  curiosidad: 0,
+  culpa: 0
+};
 
-function updateUI(){
-  document.getElementById("energy").textContent = energy;
-  document.getElementById("rate").textContent = "+"+rate;
+// =================== ESCENAS ===================
 
-  [1,2,3,4].forEach(i=>{
-    if(modules.includes(i)){
-      document.getElementById("m"+i).classList.remove("locked");
-      document.querySelector("#m"+i+" button").disabled=true;
-    }
+const scenes = {
+
+  inicio: {
+    title: "Un día normal",
+    text: "Abres los ojos antes de que suene la alarma.\nNo recuerdas haber soñado, pero tienes una sensación rara.\nComo si algo hoy fuera distinto.",
+    choices: [
+      { text:"Levantarte", next:"levantarse", effect:()=>state.rutina++ },
+      { text:"Quedarte unos minutos más", next:"cama", effect:()=>state.culpa++ }
+    ]
+  },
+
+  levantarse: {
+    title: "Rutina",
+    text: "Te levantas casi en automático.\nEl suelo está frío.\nTodo parece exactamente igual que siempre.",
+    choices: [
+      { text:"Ir al baño", next:"bano" },
+      { text:"Mirar el móvil", next:"movil", effect:()=>state.curiosidad++ }
+    ]
+  },
+
+  cama: {
+    title: "Cinco minutos más",
+    text: "Cierras los ojos.\nSabes que no deberías.\nEl silencio es cómodo… demasiado.",
+    choices: [
+      { text:"Levantarte ahora", next:"levantarse" },
+      { text:"Volver a dormir", next:"final_rutina", effect:()=>state.rutina++ }
+    ]
+  },
+
+  movil: {
+    title: "Notificación",
+    text: "Hay un mensaje nuevo.\nNo tienes guardado este contacto.\nSolo dice:\n\n“¿Sigues fingiendo que no lo recuerdas?”",
+    choices: [
+      { text:"Abrir el mensaje", next:"mensaje", effect:()=>state.curiosidad+=2 },
+      { text:"Ignorarlo", next:"bano", effect:()=>state.rutina++ }
+    ]
+  },
+
+  mensaje: {
+    title: "Lectura",
+    text: "El mensaje desaparece al abrirlo.\nComo si nunca hubiera existido.\nEl móvil vuelve a estar vacío.",
+    choices: [
+      { text:"Pensar en ello", next:"final_curioso", effect:()=>state.culpa++ },
+      { text:"Seguir con tu día", next:"bano" }
+    ]
+  },
+
+  bano: {
+    title: "Espejo",
+    text: "Te miras al espejo.\nPor un segundo, juras que tu reflejo tarda en imitarte.",
+    choices: [
+      { text:"Apartar la mirada", next:"final_rutina" },
+      { text:"Mirarte fijamente", next:"final_oculto", condition:()=>state.curiosidad>=2 }
+    ]
+  },
+
+  // =================== FINALES ===================
+
+  final_rutina: {
+    title: "Rutina",
+    text: "El día continúa.\nNada cambia.\nQuizá eso era lo que querías.\n\nFINAL: RUTINA",
+    choices:[]
+  },
+
+  final_curioso: {
+    title: "Duda",
+    text: "El mensaje vuelve a tu cabeza una y otra vez.\nPuede que hoy no pase nada.\nPero ya no podrás ignorarlo.\n\nFINAL: DUDA",
+    choices:[]
+  },
+
+  final_oculto: {
+    title: "Reconocimiento",
+    text: "El reflejo sonríe antes que tú.\nAhora recuerdas.\nSiempre lo supiste.\n\nFINAL OCULTO",
+    choices:[]
+  }
+
+};
+
+// =================== MOTOR ===================
+
+function render(){
+  const scene = scenes[state.scene];
+  document.getElementById("title").textContent = scene.title;
+  document.getElementById("text").textContent = scene.text;
+
+  const choicesBox = document.getElementById("choices");
+  choicesBox.innerHTML = "";
+
+  scene.choices.forEach(choice=>{
+    if(choice.condition && !choice.condition()) return;
+
+    const btn = document.createElement("button");
+    btn.textContent = choice.text;
+    btn.onclick = ()=>{
+      if(choice.effect) choice.effect();
+      state.scene = choice.next;
+      save();
+      render();
+    };
+    choicesBox.appendChild(btn);
   });
 }
 
-function generate(){
-  energy++;
-  save();
-}
-
-function buyModule(id){
-  if(energy>=costs[id] && !modules.includes(id)){
-    energy-=costs[id];
-    rate+=gains[id];
-    modules.push(id);
-    save();
-  }
-}
-
 function save(){
-  localStorage.setItem("energy",energy);
-  localStorage.setItem("rate",rate);
-  localStorage.setItem("modules",JSON.stringify(modules));
-  updateUI();
+  localStorage.setItem("gameState", JSON.stringify(state));
 }
 
-setInterval(()=>{
-  energy+=rate;
-  save();
-},1000);
-
-function resetGame(){
-  if(confirm("¿Reiniciar el sistema?")){
-    localStorage.clear();
-    location.reload();
-  }
-}
-
-updateUI();
+render();
 </script>
 
 </body>
